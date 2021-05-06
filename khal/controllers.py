@@ -25,9 +25,10 @@ import logging
 import os
 import re
 import textwrap
+import json
 from collections import OrderedDict, defaultdict
 from shutil import get_terminal_size
-from typing import Iterable, List, Tuple
+from typing import Callable, Iterable, List, Tuple
 
 import pytz
 from click import confirm, echo, prompt, style
@@ -68,6 +69,14 @@ def format_day(day, format_string: str, locale, attributes=None):
         return format_string.format(**attributes) + colors["reset"]
     except (KeyError, IndexError):
         raise KeyError("cannot format day with: %s" % format_string)
+
+
+def human_formatter(format_string):
+    return lambda *args, **kwargs: format_string.format(*args, **kwargs)
+
+
+def json_formatter(fields):
+    return lambda **kwargs: json.dumps(dict(filter(lambda e: e[0] in fields, kwargs.items())), ensure_ascii=False)
 
 
 def calendar(collection, agenda_format=None, notstarted=False, once=False, daterange=None,
@@ -157,10 +166,12 @@ def start_end_from_daterange(
 
 
 def get_events_between(
+#<<<<<<< HEAD
     collection: CalendarCollection,
     locale: dict,
     start: dt.datetime,
     end: dt.datetime,
+    formatter: Callable,
     agenda_format: str,
     notstarted: bool,
     env: dict,
@@ -174,6 +185,7 @@ def get_events_between(
     :param collection:
     :param start: the start datetime
     :param end: the end datetime
+    :param formatter: a function that is used for formatting the event
     :param agenda_format: a format string that can be used in python string formatting
     :param env: a collection of "static" values like calendar names and color
     :param nostarted: True if each event should start after start (instead of
@@ -209,11 +221,11 @@ def get_events_between(
             continue
 
         try:
-            event_string = event.format(agenda_format, relative_to=(start, end), env=env)
+            event_string = event.format(formatter, relative_to=(start, end), env=env, colors=colors)
         except KeyError as error:
             raise FatalError(error)
 
-        if width:
+        if width and colors:
             event_list += utils.color_wrap(event_string, width)
         else:
             event_list.append(event_string)
@@ -234,6 +246,7 @@ def khal_list(
     width: bool = False,
     env=None,
     datepoint=None,
+    json: Iterable = [],
 ):
     """returns a list of all events in `daterange`"""
     assert daterange is not None or datepoint is not None
@@ -242,6 +255,13 @@ def khal_list(
     # because empty strings are also Falsish
     if agenda_format is None:
         agenda_format = conf['view']['agenda_event_format']
+
+    if len(json) == 0:
+        formatter = human_formatter(agenda_format)
+        colors = True
+    else:
+        formatter = json_formatter(json)
+        colors = False
 
     if daterange is not None:
         if day_format is None:
@@ -285,13 +305,14 @@ def khal_list(
         else:
             day_end = dt.datetime.combine(start.date(), dt.time.max)
         current_events = get_events_between(
-            collection, locale=conf['locale'], agenda_format=agenda_format, start=start,
+            collection, locale=conf['locale'], formatter=formatter, start=start,
             end=day_end, notstarted=notstarted, original_start=original_start,
             env=env,
             seen=once,
             width=width,
+            colors=colors,
         )
-        if day_format and (conf['default']['show_all_days'] or current_events):
+        if day_format and (conf['default']['show_all_days'] or current_events) and len(json) == 0:
             if len(event_column) != 0 and conf['view']['blank_line_before_day']:
                 event_column.append('')
             event_column.append(format_day(start.date(), day_format, conf['locale']))
@@ -410,7 +431,7 @@ def new_from_args(collection, calendar_name, conf, dtstart=None, dtend=None,
     if conf['default']['print_new'] == 'event':
         if format is None:
             format = conf['view']['event_format']
-        echo(event.format(format, dt.datetime.now(), env=env))
+        echo(event.format(human_formatter(format), dt.datetime.now(), env=env))
     elif conf['default']['print_new'] == 'path':
         path = os.path.join(
             collection._calendars[event.calendar]['path'],
