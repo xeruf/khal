@@ -553,7 +553,7 @@ class Event:
             alarmstr = ''
         return alarmstr
 
-    def format(self, formatter, format_string, relative_to, env=None, colors=True):
+    def attributes(self, relative_to, env=None, colors=True):
         """
         :param colors: determines if colors codes should be printed or not
         """
@@ -716,7 +716,7 @@ class Event:
 
         attributes['status'] = self.status + ' ' if self.status else ''
         attributes['cancelled'] = 'CANCELLED ' if self.status == 'CANCELLED' else ''
-        return formatter(**dict(attributes)) + attributes["reset"]
+        return dict(attributes)
 
     def duplicate(self):
         """duplicate this event's PROTO event
@@ -752,7 +752,7 @@ class Event:
         for key in to_pop:
             self._vevents.pop(key)
 
-    @property
+    @ property
     def status(self):
         return self._vevents[self.ref].get('STATUS', '')
 
