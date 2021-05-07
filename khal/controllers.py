@@ -73,6 +73,9 @@ def format_day(day, format_string: str, locale, attributes=None):
 
 def human_formatter(format_string, width=None):
     def fmt(rows):
+        single = type(rows) == dict
+        if single:
+            rows = [rows]
         results = []
         for row in rows:
             s = format_string.format(**row) + style('', reset=True)
@@ -80,7 +83,10 @@ def human_formatter(format_string, width=None):
                 results += utils.color_wrap(s, width)
             else:
                 results.append(s)
-        return results
+        if single:
+            return results[0]
+        else:
+            return results
     return fmt
 
 
