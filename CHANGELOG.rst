@@ -17,6 +17,7 @@ not released
 * NEW Add widget to interactive event editor that allows adding attendees as
   comma separated list of email addresses
 * NEW Add support for Python 3.10
+* NEW Add `--json` option to output event data as JSON objects
 * CHANGE `search`, `at`, and `list` don't print "No events" anymore if no matching
   events are found
 * NEW Add option to use `multiple` color only when not all calendar colors can
