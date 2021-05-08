@@ -311,7 +311,7 @@ def khal_list(
 
 def new_interactive(collection, calendar_name, conf, info, location=None,
                     categories=None, repeat=None, until=None, alarms=None,
-                    format=None, env=None, url=None):
+                    format=None, json=[], env=None, url=None):
     try:
         info = parse_datetime.eventinfofstr(
             info, conf['locale'],
@@ -362,7 +362,7 @@ def new_interactive(collection, calendar_name, conf, info, location=None,
         info['description'] = ''
 
     event = new_from_args(
-        collection, calendar_name, conf, format=format, env=env,
+        collection, calendar_name, conf, format=format, json=json, env=env,
         location=location, categories=categories,
         repeat=repeat, until=until, alarms=alarms, url=url,
         **info)
@@ -375,7 +375,7 @@ def new_interactive(collection, calendar_name, conf, info, location=None,
 
 def new_from_string(collection, calendar_name, conf, info, location=None,
                     categories=None, repeat=None, until=None, alarms=None,
-                    url=None, format=None, env=None):
+                    url=None, format=None, json=[], env=None):
     """construct a new event from a string and add it"""
     info = parse_datetime.eventinfofstr(
         info, conf['locale'],
@@ -384,7 +384,7 @@ def new_from_string(collection, calendar_name, conf, info, location=None,
         adjust_reasonably=True, localize=False
     )
     new_from_args(
-        collection, calendar_name, conf, format=format, env=env,
+        collection, calendar_name, conf, format=format, json=json, env=env,
         location=location, categories=categories, repeat=repeat,
         until=until, alarms=alarms, url=url, **info
     )
@@ -393,7 +393,7 @@ def new_from_string(collection, calendar_name, conf, info, location=None,
 def new_from_args(collection, calendar_name, conf, dtstart=None, dtend=None,
                   summary=None, description=None, allday=None, location=None,
                   categories=None, repeat=None, until=None, alarms=None,
-                  timezone=None, url=None, format=None, env=None):
+                  timezone=None, url=None, format=None, json=[], env=None):
     """Create a new event from arguments and add to vdirs"""
     if isinstance(categories, str):
         categories = [category.strip() for category in categories.split(',')]
@@ -416,9 +416,13 @@ def new_from_args(collection, calendar_name, conf, dtstart=None, dtend=None,
         )
 
     if conf['default']['print_new'] == 'event':
-        if format is None:
-            format = conf['view']['event_format']
-        echo(human_formatter(format)(event.format(dt.datetime.now(), env=env)))
+        if len(json) == 0:
+            if format is None:
+                format = conf['view']['event_format']
+            formatter = human_formatter(format)
+        else:
+            formatter = json_formatter(json)
+        echo(formatter(event.format(dt.datetime.now(), env=env)))
     elif conf['default']['print_new'] == 'path':
         path = os.path.join(
             collection._calendars[event.calendar]['path'],
