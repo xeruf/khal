@@ -208,13 +208,14 @@ class U_Event(urwid.Text):
             format_ = self._conf['view']['agenda_event_format']
         else:
             format_ = self._conf['view']['event_format']
+        formatter_ = utils.human_formatter(format_, colors=False)
         if self.this_date:
             date_ = self.this_date
         elif self.event.allday:
             date_ = self.event.start
         else:
             date_ = self.event.start.date()
-        text = self.event.format(format_, date_, colors=False)
+        text = formatter_(self.event.attributes(date_, colors=False))
         if self._conf['locale']['unicode_symbols']:
             newline = ' \N{LEFTWARDS ARROW WITH HOOK} '
         else:
@@ -237,6 +238,7 @@ class U_Event(urwid.Text):
 
 class EventListBox(urwid.ListBox):
     """Container for list of U_Events"""
+
     def __init__(
             self, *args, parent, conf,
             delete_status, toggle_delete_instance, toggle_delete_all,
@@ -277,6 +279,7 @@ class EventListBox(urwid.ListBox):
 class DListBox(EventListBox):
     """Container for a DayWalker"""
     # XXX unfortunate naming, there is also DateListBox
+
     def __init__(self, *args, **kwargs):
         dynamic_days = kwargs.pop('dynamic_days', True)
         super().__init__(*args, **kwargs)
@@ -1004,6 +1007,7 @@ class EventDisplay(urwid.WidgetWrap):
 
 class SearchDialog(urwid.WidgetWrap):
     """A Search Dialog Widget"""
+
     def __init__(self, search_func, abort_func):
 
         class Search(Edit):
