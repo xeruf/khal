@@ -5,9 +5,9 @@ import pytz
 from freezegun import freeze_time
 from icalendar import Parameters, vCalAddress, vRecur, vText
 
+from khal.controllers import human_formatter
 from khal.khalendar.event import (AllDayEvent, Event, FloatingEvent,
                                   LocalizedEvent, create_timezone)
-from khal.controllers import human_formatter
 
 from .utils import (BERLIN, BOGOTA, GMTPLUS3, LOCALE_BERLIN, LOCALE_BOGOTA,
                     LOCALE_MIXED, NEW_YORK, _get_text, normalize_component)

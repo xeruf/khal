@@ -35,7 +35,7 @@ from .exceptions import FatalError
 from .settings import InvalidSettingsError, get_config
 from .settings.exceptions import NoConfigFile
 from .terminal import colored
-from .utils import (human_formatter, json_formatter)
+from .utils import human_formatter, json_formatter
 
 try:
     from setproctitle import setproctitle

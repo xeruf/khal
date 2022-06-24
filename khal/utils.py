@@ -23,16 +23,17 @@
 
 
 import datetime as dt
+import json
 import random
 import re
 import string
-import json
 from calendar import month_abbr, timegm
 from textwrap import wrap
 from typing import Iterator, List, Optional, Tuple
 
 import pytz
 from click import style
+
 from .terminal import get_color
 
 

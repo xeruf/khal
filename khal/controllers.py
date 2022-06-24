@@ -27,15 +27,14 @@ import re
 import textwrap
 from collections import OrderedDict, defaultdict
 from shutil import get_terminal_size
-from typing import Optional, Callable, Iterable, List, Tuple
+from typing import Callable, Iterable, List, Optional, Tuple
 
 import pytz
 from click import confirm, echo, prompt, style
 
-from khal import (__productname__, __version__, calendar_display,
-                  parse_datetime)
-from khal.khalendar import CalendarCollection
+from khal import __productname__, __version__, calendar_display, parse_datetime
 from khal.exceptions import DateTimeParseError, FatalError
+from khal.khalendar import CalendarCollection
 from khal.khalendar.event import Event
 from khal.khalendar.exceptions import DuplicateUid, ReadOnlyCalendarError
 
@@ -46,7 +45,7 @@ from .icalendar import sort_key as sort_vevent_key
 from .icalendar import split_ics
 from .khalendar.vdir import Item
 from .terminal import merge_columns
-from .utils import (human_formatter, json_formatter)
+from .utils import human_formatter, json_formatter
 
 logger = logging.getLogger('khal')
 
@@ -165,10 +164,10 @@ def get_events_between(
     formatter: Callable,
     notstarted: bool,
     env: dict,
-    seen=None,
     original_start: dt.datetime,
+    seen=None,
+    colors=False,
 ) -> List[str]:
-     #   collection, locale, start, end, formatter, notstarted=False, env=None, width=None, seen=None, original_start=None, colors=True):
     """returns a list of events scheduled between start and end. Start and end
     are strings or datetimes (of some kind).
 
@@ -180,8 +179,9 @@ def get_events_between(
     :param nostarted: True if each event should start after start (instead of
       be active between start and end)
     :param env: a collection of "static" values like calendar names and color
-    :param seen:
     :param original_start: start datetime to compare against of notstarted is set
+    :param seen:
+    :param colors:
     :returns: a list to be printed as the agenda for the given days
     """
     assert not (notstarted and not original_start)
@@ -234,7 +234,7 @@ def khal_list(
     width: bool = False,
     env=None,
     datepoint=None,
-    json: Optional[Iterable] = None,
+    json: Optional[List] = None,
 ):
     """returns a list of all events in `daterange`"""
     assert daterange is not None or datepoint is not None

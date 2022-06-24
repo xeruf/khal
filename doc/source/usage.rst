@@ -207,7 +207,7 @@ Several options are common to almost all of :program:`khal`'s commands
    object is created for each specified field. The matching events are collected into
    a JSON array. This option accepts the following subset of :option:`--format`
    template options
-   
+
    ::
 
            title, description, uid, start, start-long, start-date,
@@ -220,7 +220,7 @@ Several options are common to almost all of :program:`khal`'s commands
            start-end-time-style, end-necessary, end-necessary-long,
            status, cancelled, organizer, url, duration, duration-full,
            repeat-pattern, all-day, categories
-           
+
 
    Note that `calendar-color` will be the actual color name rather than the ANSI color code,
    and the `repeat-symbol`, `status`, and `cancelled` values will have leading/trailing
