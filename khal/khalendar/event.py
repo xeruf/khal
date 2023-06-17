@@ -69,7 +69,7 @@ class Event:
                  color: Optional[str] = None,
                  start: Optional[dt.datetime] = None,
                  end: Optional[dt.datetime] = None,
-                 address: Optional[str] = None,
+                 address: str = '',
                  ):
         """
         :param start: start datetime of this event instance
