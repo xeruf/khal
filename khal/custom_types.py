@@ -74,6 +74,7 @@ class EventCreationTypes(TypedDict):
     alarms: str
     timezone: pytz.BaseTzInfo
     url: str
+    address: str
 
 
 PathLike = Union[str, os.PathLike]
