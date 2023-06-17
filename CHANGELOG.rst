@@ -7,6 +7,13 @@ Package maintainers and users who have to manually update their installation
 may want to subscribe to `GitHub's tag feed
 <https://github.com/geier/khal/tags.atom>`_.
 
+0.11.3
+======
+not released yet
+
+* NEW event format option `status-symbol` which represents the status of an
+  event with a symbol (e.g. `✓` for confirmed, `✗` for cancelled, `?` for
+  tentative)
 
 0.11.2
 ======
