@@ -12,6 +12,7 @@ class CalendarConfiguration(TypedDict):
     color: str
     priority: int
     ctype: str
+    address: str
 
 
 class LocaleConfiguration(TypedDict):
@@ -74,7 +75,6 @@ class EventCreationTypes(TypedDict):
     alarms: str
     timezone: pytz.BaseTzInfo
     url: str
-    address: str
 
 
 PathLike = Union[str, os.PathLike]
