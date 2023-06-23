@@ -1345,8 +1345,19 @@ def start_pane(pane, callback, program_info='', quit_keys=None):
     logger.addHandler(header_handler)
 
     frame.open(pane, callback)
-    palette = _add_calendar_colors(
-        getattr(colors, pane._conf['view']['theme']), pane.collection)
+    palette = _add_calendar_colors(getattr(colors, pane._conf['view']['theme']), pane.collection)
+
+    def merge_palettes(pallete_a, pallete_b) -> List[Tuple[str, str, str, str, str]]:
+        """Merge two palettes together, with the second palette taking priority."""
+        merged = {}
+        for entry in pallete_a:
+            merged[entry[0]] = entry
+        for entry in pallete_b:
+            merged[entry[0]] = entry
+        return list(merged.values())
+
+    overwrite = [(key, *values) for key, values in pane._conf['palette'].items()]
+    palette = merge_palettes(palette, overwrite)
     loop = urwid.MainLoop(
         frame, palette, unhandled_input=frame.on_key_press, pop_ups=True)
     frame.loop = loop
