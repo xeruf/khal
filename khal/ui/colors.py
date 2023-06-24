@@ -19,6 +19,7 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+from typing import List, Tuple
 
 dark = [
     ('header', 'white', 'black'),
@@ -95,4 +96,9 @@ light = [
     ('popupbg', 'white', 'black', 'bold'),
     ('popupper', 'black', 'light gray'),
     ('caption', 'black', '', ''),
-]
+            ]
+themes = {'light': light, 'dark': dark}
+
+
+def register_color_theme(name: str, theme: List[Tuple[str, ...]]):
+    themes[name] = theme

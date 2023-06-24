@@ -31,7 +31,7 @@ import urwid
 
 from .. import utils
 from ..khalendar import CalendarCollection
-from ..khalendar.exceptions import ReadOnlyCalendarError
+from ..khalendar.exceptions import ReadOnlyCalendarError, FatalError
 from . import colors
 from .base import Pane, Window
 from .editor import EventEditor, ExportDialog
@@ -1294,6 +1294,17 @@ def _add_calendar_colors(palette: List, collection: CalendarCollection) -> List:
 
 def start_pane(pane, callback, program_info='', quit_keys=None):
     """Open the user interface with the given initial pane."""
+
+    # we can't use configobj to do validation of theme for us, because when the
+    # config is passed, we haven't loaded plugins yet. We could load plugins
+    # earlier, but then logging wouldn't work at plugin loading time.
+    # We do this early, so that logger messages still get shown in a regular way
+    theme = colors.themes.get(pane._conf['view']['theme'])
+    if theme is None:
+        logger.fatal(f'Invalid theme {pane._conf["view"]["theme"]} configured')
+        logger.fatal(f'Available themes are: {", ".join(colors.themes.keys())}')
+        raise FatalError
+
     quit_keys = quit_keys or ['q']
 
     frame = Window(
@@ -1344,7 +1355,8 @@ def start_pane(pane, callback, program_info='', quit_keys=None):
     logger.addHandler(header_handler)
 
     frame.open(pane, callback)
-    palette = _add_calendar_colors(getattr(colors, pane._conf['view']['theme']), pane.collection)
+
+    palette = _add_calendar_colors(theme, pane.collection)
 
     def merge_palettes(pallete_a, pallete_b) -> List[Tuple[str, str, str, str, str]]:
         """Merge two palettes together, with the second palette taking priority."""
