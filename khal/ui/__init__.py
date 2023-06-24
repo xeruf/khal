@@ -31,7 +31,7 @@ import urwid
 
 from .. import utils
 from ..khalendar import CalendarCollection
-from ..khalendar.exceptions import ReadOnlyCalendarError, FatalError
+from ..khalendar.exceptions import FatalError, ReadOnlyCalendarError
 from . import colors
 from .base import Pane, Window
 from .editor import EventEditor, ExportDialog

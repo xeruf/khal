@@ -26,10 +26,10 @@ import stat
 import sys
 import textwrap
 from shutil import get_terminal_size
-import xdg
 
 import click
 import click_log
+import xdg
 
 from . import __version__, controllers, khalendar
 from .exceptions import FatalError
@@ -700,7 +700,7 @@ def find_load_plugins():
     sys.path.append(plugin_dir)
     for plugin in os.listdir(plugin_dir):
         if os.path.isfile(os.path.join(plugin_dir, plugin, '__init__.py')):
-            logger.debug('loading plugin {}'.format(plugin))
+            logger.debug(f'loading plugin {plugin}')
             __import__(plugin)
 
 
