@@ -36,7 +36,7 @@ from . import colors
 from .base import Pane, Window
 from .editor import EventEditor, ExportDialog
 from .widgets import CalendarWidget, NColumns, NPile, button, linebox
-from .widgets import ExtendedEdit as Edit
+from .widgets import ExtendedEdit as Edit, CAttrMap
 
 logger = logging.getLogger('khal')
 
@@ -1080,8 +1080,8 @@ class ClassicView(Pane):
             toggle_delete_instance=self.toggle_delete_instance,
             dynamic_days=self._conf['view']['dynamic_days'],
         )
-        self.eventscolumn = ContainerWidget(EventColumn(pane=self, elistbox=elistbox))
-        calendar = CalendarWidget(
+        self.eventscolumn = ContainerWidget(CAttrMap(EventColumn(pane=self, elistbox=elistbox), 'eventcolumn', 'eventcolumn focus'))
+        calendar = CAttrMap(CalendarWidget(
             on_date_change=self.eventscolumn.original_widget.set_focus_date,
             keybindings=self._conf['keybindings'],
             on_press={key: self.new_event for key in self._conf['keybindings']['new']},
@@ -1089,7 +1089,7 @@ class ClassicView(Pane):
             weeknumbers=self._conf['locale']['weeknumbers'],
             monthdisplay=self._conf['view']['monthdisplay'],
             get_styles=collection.get_styles
-        )
+        ), 'calendar', 'calendar focus')
         if self._conf['view']['dynamic_days']:
             elistbox.set_focus_date_callback = calendar.set_focus_date
         else:

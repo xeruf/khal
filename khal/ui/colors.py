@@ -53,6 +53,11 @@ dark = [
     ('frame focus color', 'dark blue', 'black'),
     ('frame focus top', 'dark magenta', 'black'),
 
+    ('eventcolumn', '', '', ''),
+    ('eventcolumn focus', '', '', ''),
+    ('calendar', '', '', ''),
+    ('calendar focus', '', '', ''),
+
     ('editbx', 'light gray', 'dark blue'),
     ('editcp', 'black', 'light gray', 'standout'),
     ('popupbg', 'white', 'black', 'bold'),
@@ -90,6 +95,11 @@ light = [
     ('frame focus', 'light red', 'white'),
     ('frame focus color', 'dark blue', 'white'),
     ('frame focus top', 'dark magenta', 'white'),
+
+    ('eventcolumn', '', '', ''),
+    ('eventcolumn focus', '', '', ''),
+    ('calendar', '', '', ''),
+    ('calendar focus', '', '', ''),
 
     ('editbx', 'light gray', 'dark blue'),
     ('editcp', 'black', 'light gray', 'standout'),
