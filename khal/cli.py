@@ -484,7 +484,7 @@ def _get_cli():
     @multi_calendar_option
     @click.pass_context
     def interactive(ctx, include_calendar, exclude_calendar):
-        '''Interactive UI. Also launchable via `ikhal`.'''
+        '''Interactive UI. Also launchable via `khal interactive`.'''
         controllers.interactive(
             build_collection(
                 ctx.obj['conf'],
