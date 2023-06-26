@@ -30,7 +30,7 @@ dark = [
     ('list', 'black', 'white'),
     ('list focused', 'white', 'light blue', 'bold'),
     ('edit', 'black', 'white'),
-    ('edit focused', 'white', 'light blue', 'bold'),
+    ('edit focus', 'white', 'light blue', 'bold'),
     ('button', 'black', 'dark cyan'),
     ('button focused', 'white', 'light blue', 'bold'),
 
@@ -45,7 +45,6 @@ dark = [
     ('dayname', 'light gray', ''),
     ('monthname', 'light gray', ''),
     ('weeknumber_right', 'light gray', ''),
-    ('edit', 'white', 'dark blue'),
     ('alert', 'white', 'dark red'),
     ('mark', 'white', 'dark green'),
     ('frame', 'white', 'black'),
@@ -73,7 +72,7 @@ light = [
     ('list', 'black', 'white'),
     ('list focused', 'white', 'light blue', 'bold'),
     ('edit', 'black', 'white'),
-    ('edit focused', 'white', 'light blue', 'bold'),
+    ('edit focus', 'white', 'light blue', 'bold'),
     ('button', 'black', 'dark cyan'),
     ('button focused', 'white', 'light blue', 'bold'),
 
@@ -88,7 +87,6 @@ light = [
     ('dayname', 'dark gray', 'white'),
     ('monthname', 'dark gray', 'white'),
     ('weeknumber_right', 'dark gray', 'white'),
-    ('edit', 'white', 'dark blue'),
     ('alert', 'white', 'dark red'),
     ('mark', 'white', 'dark green'),
     ('frame', 'dark gray', 'white'),
