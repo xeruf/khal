@@ -84,13 +84,13 @@ class DateConversionError(Exception):
 
 
 class SelectableText(urwid.Text):
-    def selectable(self):
+    def selectable(self) -> bool:
         return True
 
-    def keypress(self, size, key):
+    def keypress(self, size: Tuple[int], key: Optional[str]) -> Optional[str]:
         return key
 
-    def get_cursor_coords(self, size):
+    def get_cursor_coords(self, size: Tuple[int]) -> Tuple[int, int]:
         return 0, 0
 
     def render(self, size, focus=False):
@@ -144,7 +144,7 @@ class DateHeader(SelectableText):
             day=daystr,
         )
 
-    def keypress(self, _, key: str) -> str:
+    def keypress(self, size: Tuple[int], key: Optional[str]) -> Optional[str]:
         binds = self._conf['keybindings']
         if key in binds['left']:
             key = 'left'
@@ -223,7 +223,7 @@ class U_Event(urwid.Text):
 
         self.set_text(mark + ' ' + text.replace('\n', newline))
 
-    def keypress(self, _, key: str) -> str:
+    def keypress(self, size: Tuple[int], key: Optional[str]) -> Optional[str]:
         binds = self._conf['keybindings']
         if key in binds['left']:
             key = 'left'
@@ -254,7 +254,7 @@ class EventListBox(urwid.ListBox):
         self.set_focus_date_callback = set_focus_date_callback
         super().__init__(*args, **kwargs)
 
-    def keypress(self, size, key):
+    def keypress(self, size: Tuple[int], key: Optional[str]) -> Optional[str]:
         return super().keypress(size, key)
 
     @property
@@ -310,7 +310,7 @@ class DListBox(EventListBox):
         self.body.ensure_date(day)
         self.clean()
 
-    def keypress(self, size, key):
+    def keypress(self, size: Tuple[int], key: Optional[str]) -> Optional[str]:
         if key in self._conf['keybindings']['up']:
             key = 'up'
         if key in self._conf['keybindings']['down']:
@@ -614,7 +614,7 @@ class DateListBox(urwid.ListBox):
         title.set_text(title.get_text()[0])
 
     @property
-    def focus_event(self):
+    def focus_event(self) -> Optional[U_Event]:
         if self.body.focus == 0:
             return None
         else:
@@ -653,7 +653,7 @@ class EventColumn(urwid.WidgetWrap):
         urwid.WidgetWrap.__init__(self, self.container)
 
     @property
-    def focus_event(self):
+    def focus_event(self) -> Optional[U_Event]:
         """returns the event currently in focus"""
         return self.dlistbox.focus_event
 
@@ -681,7 +681,7 @@ class EventColumn(urwid.WidgetWrap):
         self._last_focused_date = date
         self.dlistbox.ensure_date(date)
 
-    def update(self, min_date, max_date, everything):
+    def update(self, min_date, max_date: dt.date, everything: bool):
         """update DateListBox
 
         if `everything` is True, reset all displayed dates, else only those between
@@ -704,7 +704,7 @@ class EventColumn(urwid.WidgetWrap):
         """
         self.dlistbox.refresh_titles(min_date, max_date, everything)
 
-    def update_date_line(self):
+    def update_date_line(self) -> None:
         """refresh titles in DateListBoxes"""
         self.dlistbox.update_date_line()
 
@@ -863,6 +863,8 @@ class EventColumn(urwid.WidgetWrap):
         # because their title is determined by X-BIRTHDAY and X-FNAME properties
         # which are also copied. If the events' summary is edited it will show
         # up on disk but not be displayed in khal
+        if self.focus_event is None:
+            return None
         event = self.focus_event.event.duplicate()
         try:
             self.pane.collection.insert(event)
@@ -914,7 +916,7 @@ class EventColumn(urwid.WidgetWrap):
     def selectable(self):
         return True
 
-    def keypress(self, size, key):
+    def keypress(self, size: Tuple[int], key: Optional[str]) -> Optional[str]:
         prev_shown = self._eventshown
         self._eventshown = False
         self.clear_event_view()
@@ -1025,7 +1027,7 @@ class SearchDialog(urwid.WidgetWrap):
 
         class Search(Edit):
 
-            def keypress(self, size, key):
+            def keypress(self, size: Tuple[int], key: Optional[str]) -> Optional[str]:
                 if key == 'enter':
                     search_func(self.text)
                 else:
@@ -1144,7 +1146,7 @@ class ClassicView(Pane):
             event = self.collection.delete_instance(href, etag, account, rec_id)
             updated_etags[event.href] = event.etag
 
-    def keypress(self, size, key: str):
+    def keypress(self, size: Tuple[int], key: Optional[str]) -> Optional[str]:
         binds = self._conf['keybindings']
         if key in binds['search']:
             self.search()
@@ -1206,7 +1208,7 @@ class ClassicView(Pane):
 
 
 def _urwid_palette_entry(
-    name: str, color: str, hmethod: str, color_mode: Literal['256color', 'rgb'],
+    name: str, color: str, hmethod: str, color_mode: Literal['256colors', 'rgb'],
     foreground: str = '', background: str = '',
 ) -> Tuple[str, str, str, str, str, str]:
     """Create an urwid compatible palette entry.

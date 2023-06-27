@@ -31,6 +31,7 @@ from typing import Optional, Tuple
 import urwid
 
 from .calendarwidget import CalendarWidget  # noqa
+from typing import List
 
 
 class DateConversionError(Exception):
@@ -77,7 +78,7 @@ def goto_end_of_line(text):
 class ExtendedEdit(urwid.Edit):
     """A text editing widget supporting some more editing commands"""
 
-    def keypress(self, size, key: str) -> Optional[Tuple[Tuple[int, int], str]]:
+    def keypress(self, size: Tuple[int], key: Optional[str]) -> Optional[str]:
         if key == 'ctrl w':
             self._delete_word()
         elif key == 'ctrl u':
@@ -199,7 +200,8 @@ class TimeWidget(DateTimeWidget):
 
 class Choice(urwid.PopUpLauncher):
     def __init__(
-            self, choices, active, decorate_func=None, overlay_width=32, callback=lambda: None,
+        self, choices: List[str], active: str,
+        decorate_func=None, overlay_width: int=32, callback=lambda: None,
     ):
         self.choices = choices
         self._callback = callback
@@ -209,9 +211,7 @@ class Choice(urwid.PopUpLauncher):
 
     def create_pop_up(self):
         pop_up = ChoiceList(self, callback=self._callback)
-        urwid.connect_signal(
-            pop_up, 'close', lambda button: self.close_pop_up(),
-        )
+        urwid.connect_signal(pop_up, 'close', lambda button: self.close_pop_up())
         return pop_up
 
     def get_pop_up_parameters(self):
@@ -233,8 +233,7 @@ class Choice(urwid.PopUpLauncher):
         self._active = val
         self.button = urwid.Button(self._decorate(self._active))
         urwid.PopUpLauncher.__init__(self, self.button)
-        urwid.connect_signal(self.button, 'click',
-                             lambda button: self.open_pop_up())
+        urwid.connect_signal(self.button, 'click', lambda button: self.open_pop_up())
 
 
 class ChoiceList(urwid.WidgetWrap):

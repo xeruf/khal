@@ -56,7 +56,7 @@ class StartEnd:
 
 
 class CalendarPopUp(urwid.PopUpLauncher):
-    def __init__(self, widget, on_date_change, weeknumbers=False,
+    def __init__(self, widget, on_date_change, weeknumbers: Literal['left', 'right', False]=False,
                  firstweekday=0, monthdisplay='firstday', keybindings=None):
         self._on_date_change = on_date_change
         self._weeknumbers = weeknumbers
@@ -130,7 +130,7 @@ class DateEdit(urwid.WidgetWrap):
         padded = CAttrMap(urwid.Padding(wrapped, align='left', width=datewidth, left=0, right=1), 'calendar', 'calendar focus')
         super().__init__(padded)
 
-    def _validate(self, text):
+    def _validate(self, text: str):
         try:
             _date = dt.datetime.strptime(text, self._dateformat).date()
         except ValueError:
