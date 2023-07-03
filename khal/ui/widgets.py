@@ -26,12 +26,11 @@ if they are large, into their own files
 """
 import datetime as dt
 import re
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 import urwid
 
 from .calendarwidget import CalendarWidget  # noqa
-from typing import List
 
 
 class DateConversionError(Exception):
